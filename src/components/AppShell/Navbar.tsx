@@ -6,14 +6,20 @@ import {
   FiSettings,
   FiLogOut,
 } from "react-icons/fi";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { IconType } from "react-icons";
 import { Link } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase";
 
 export default function Navbar() {
+  const navigate = useNavigate();
   return (
     <div className="flex h-full flex-col items-center justify-between border-r border-r-neutral-200 px-6 py-8">
-      <img src="/logo.png" width={36} height={36} className="rounded-full" />
+      <Link to={"/app"}>
+        <img src="/logo.png" width={36} height={36} className="rounded-full" />
+        <span className="sr-only">home</span>
+      </Link>
       <nav className="flex flex-col gap-6">
         {NAV_MENU.map((props, i) => (
           <NavItem key={i} {...props} />
@@ -23,7 +29,14 @@ export default function Navbar() {
         <div className="cursor-pointer rounded-xl p-2 text-neutral-900 shadow-sm ring-1 ring-neutral-200 transition-all  active:scale-95 active:shadow-md">
           <FiSettings size={20} />
         </div>
-        <div className="mt-4 cursor-pointer rounded-xl p-2 text-red-500 shadow-sm ring-1  ring-neutral-200  transition-all active:scale-95 active:shadow-md">
+        <div
+          onClick={() => {
+            signOut(auth).then(() => {
+              navigate("/");
+            });
+          }}
+          className="mt-4 cursor-pointer rounded-xl p-2 text-red-500 shadow-sm ring-1  ring-neutral-200  transition-all active:scale-95 active:shadow-md"
+        >
           <FiLogOut size={20} />
         </div>
       </div>

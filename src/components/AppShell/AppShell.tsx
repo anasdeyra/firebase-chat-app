@@ -7,7 +7,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const { showAside } = useAside();
   const isBig = useMediaQuery(1024);
 
-  showAside;
   return (
     <div
       className={`grid h-screen w-full ${
@@ -17,7 +16,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       }`}
     >
       <Navbar />
-      <div className="h-full bg-neutral-50 px-6 py-8">{children}</div>
+      <div className="h-full ">{children}</div>
       {showAside && isBig && <Aside />}
     </div>
   );
