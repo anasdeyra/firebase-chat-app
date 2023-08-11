@@ -1,8 +1,8 @@
 import UserCircle, { UserCircleProps } from "./UserCircle";
 import { useEffect, useMemo, useState } from "react";
 import { LuCheckCheck } from "react-icons/lu";
-
-const NOW = new Date(Date.now());
+import { useStore } from "../store";
+import { formatDate } from "../utils/formatDate";
 
 export default function MessageCard({
   text,
@@ -11,24 +11,9 @@ export default function MessageCard({
   sendingDate,
   status,
   unreadCount,
+  chatRoomId,
 }: MessageCardprops) {
-  const hoursAgo = Math.abs(NOW.getTime() - sendingDate.getTime()) / 36e5;
-  const date = new Date(); // Replace this with your desired date
-
-  // Format time to 'hh:mm' (hours and minutes)
-  const formattedTime = date.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
-
-  // Format date to 'dd/MM/yyyy' (day, month, and year)
-  const formattedDate = date.toLocaleDateString([], {
-    day: "2-digit",
-    month: "2-digit",
-  });
-
-  const dateText = hoursAgo > 21 ? formattedDate : formattedTime;
+  const dateText = formatDate(sendingDate);
 
   const formattedText = text.length > 23 ? text.slice(0, 20) + "..." : text;
 
@@ -54,8 +39,11 @@ export default function MessageCard({
         );
     }
   }, [status]);
+
+  const { joinChatRoom } = useStore();
   return (
     <div
+      onClick={() => joinChatRoom(chatRoomId)}
       className={`flex cursor-pointer items-center  px-6 py-4 transition-colors ${
         status === "unread"
           ? "bg-neutral-50 hover:bg-neutral-100"
@@ -113,4 +101,5 @@ export type MessageCardprops = {
   status: "sent" | "seen" | "unread";
   text: string;
   unreadCount?: number;
+  chatRoomId: string;
 };
